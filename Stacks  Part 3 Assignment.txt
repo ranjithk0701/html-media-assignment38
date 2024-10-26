@@ -1,0 +1,86 @@
+1->
+
+class Solution {
+public:
+    int calPoints(vector<string>& operations) {
+        stack<int> val;
+        
+        for(const auto& op : operations) {
+            if(op == "C") {
+                // Remove the last score if the stack is not empty
+                if (!val.empty()) val.pop();
+            } 
+            else if(op == "D") {
+                // Double the last score and add it to the stack
+                if (!val.empty()) {
+                    int lastScore = val.top();
+                    val.push(lastScore * 2);
+                }
+            } 
+            else if(op == "+") {
+                // Add the sum of the last two scores
+                if (val.size() >= 2) {
+                    int lastScore = val.top(); val.pop();
+                    int secondLastScore = val.top();
+                    val.push(lastScore);  // Push back the last score
+                    val.push(lastScore + secondLastScore);
+                }
+            } 
+            else {
+                // Convert the operation string to integer and push to the stack
+                val.push(std::stoi(op));
+            }
+        }
+
+        // Calculate total score by summing all values in the stack
+        int totalScore = 0;
+        while(!val.empty()) {
+            totalScore += val.top();
+            val.pop();
+        }
+        
+        return totalScore;
+    }
+};
+
+2->
+
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(head==NULL || head->next==NULL) return head;
+        ListNode* newHead = reverseList(head->next);
+        head->next->next = head;
+        head->next = NULL;
+        return newHead;
+    }
+    ListNode* removeNodes(ListNode* head) {
+        ListNode* temp = reverseList(head);
+        stack<int> st;
+        st.push(temp->val);
+        while(temp){
+            if(temp->val > st.top()){
+                st.push(temp->val);
+            }
+            if(temp->next && (temp->next->val == st.top())){
+                st.push(temp->next->val);
+            }
+            temp = temp->next;
+        }
+        ListNode* dummy = new ListNode(-1);
+        ListNode* dummy2 = dummy;
+        while(!st.empty()){
+            int x = st.top();
+            ListNode* y = new ListNode(x);
+            dummy->next = y;
+            dummy = dummy->next;
+            st.pop();
+        }
+        return dummy2->next;
+    }
+};
+
+3->
+
+
